@@ -80,15 +80,15 @@
     padding-inline:16px;
     padding-block:28px 48px;
   }
-  .page{max-width:920px; margin-inline:auto; display:flex; flex-direction:column; gap:22px;}
+  .page{max-width:960px; margin-inline:auto; display:flex; flex-direction:column; gap:22px;}
 
-  .hero{display:flex; flex-direction:column; gap:8px; max-width:680px;}
+  .hero{display:flex; flex-direction:column; gap:8px; max-width:700px;}
   .eyebrow{
     margin:0; font-size:.72rem; font-weight:600; letter-spacing:.11em; text-transform:uppercase;
     color:var(--accent);
   }
   h1{margin:0; font-size:clamp(1.7rem,4.6vw,2.35rem); font-weight:700; letter-spacing:-.01em; text-wrap:balance;}
-  .lede{margin:0; color:var(--ink-soft); font-size:.98rem; line-height:1.55; max-width:60ch;}
+  .lede{margin:0; color:var(--ink-soft); font-size:.98rem; line-height:1.55; max-width:64ch;}
 
   .tabs{display:flex; gap:6px; flex-wrap:wrap; background:var(--surface-2); padding:5px; border-radius:12px; width:fit-content; max-width:100%;}
   .tab{
@@ -113,7 +113,7 @@
   .field:last-child{margin-bottom:0;}
   label{font-size:.82rem; font-weight:600; color:var(--ink);}
   .hint{margin:0; font-size:.78rem; color:var(--ink-soft); line-height:1.45;}
-  select, input[type="number"]{
+  select, input[type="number"], input[type="time"]{
     font-family:"IBM Plex Mono", ui-monospace, monospace;
     font-size:.94rem; font-weight:500; color:var(--ink);
     background:var(--paper); border:1px solid var(--line); border-radius:9px;
@@ -166,9 +166,75 @@
   th{font-size:.72rem; font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-soft);}
   td.mono, th.mono{font-family:"IBM Plex Mono",monospace;}
   tr.active-row td{background:var(--accent-soft);}
+  tr.total-row td{font-weight:700; border-top:2px solid var(--line);}
   .table-scroll{overflow-x:auto;}
 
   .footnote{margin:4px 2px 0; font-size:.78rem; color:var(--ink-soft); font-family:"IBM Plex Mono",monospace;}
+
+  /* --- plan de observaciones --- */
+  .plan-panel h2{margin:0 0 4px; font-size:1rem; font-weight:700;}
+  .plan-panel > .hint{margin-bottom:18px;}
+  .plan-grid{display:grid; grid-template-columns:1fr 1.25fr; gap:16px; align-items:start;}
+  @media (max-width:820px){ .plan-grid{grid-template-columns:1fr;} }
+
+  .day-toggles{display:flex; flex-wrap:wrap; gap:6px;}
+  .day-toggle{
+    appearance:none; border:1px solid var(--line); background:var(--paper); color:var(--ink-soft);
+    font-family:inherit; font-weight:600; font-size:.82rem; padding:8px 12px; border-radius:8px; cursor:pointer;
+    transition:background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .day-toggle[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:var(--accent-ink);}
+  .day-toggle:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+
+  .time-range{display:flex; align-items:center; gap:8px; flex:1;}
+  .time-range .sep{color:var(--ink-soft); font-size:.85rem;}
+
+  .break-list{display:flex; flex-direction:column; gap:8px;}
+  .break-row{display:flex; align-items:center; gap:8px;}
+  .icon-btn{
+    appearance:none; border:1px solid var(--line); background:var(--surface); color:var(--ink-soft);
+    width:34px; height:34px; border-radius:8px; cursor:pointer; font-size:1rem; line-height:1; flex-shrink:0;
+  }
+  .icon-btn:hover{color:var(--ink); border-color:var(--muted);}
+  .link-btn{
+    appearance:none; border:none; background:none; color:var(--accent); font-family:inherit; font-weight:600;
+    font-size:.78rem; padding:0; cursor:pointer; text-decoration:underline; text-underline-offset:2px;
+  }
+  .add-btn{
+    appearance:none; border:1px dashed var(--line); background:transparent; color:var(--ink-soft);
+    font-family:inherit; font-weight:600; font-size:.82rem; padding:8px 12px; border-radius:8px; cursor:pointer; width:100%; margin-top:8px;
+  }
+  .add-btn:hover{color:var(--ink); border-color:var(--muted);}
+
+  .btn{
+    appearance:none; border:1px solid var(--line); background:var(--surface); color:var(--ink);
+    font-family:inherit; font-weight:600; font-size:.86rem; padding:10px 16px; border-radius:9px; cursor:pointer;
+  }
+  .btn:hover{border-color:var(--muted);}
+  .btn-primary{background:var(--accent); border-color:var(--accent); color:var(--accent-ink); width:100%; margin-top:4px;}
+  .btn-primary:hover{filter:brightness(1.06);}
+
+  .plan-warning{
+    background:var(--accent-soft); border:1px solid var(--accent); color:var(--ink); border-radius:9px;
+    padding:10px 12px; font-size:.8rem; line-height:1.5; margin-bottom:14px;
+  }
+  .plan-warning[hidden]{display:none;}
+
+  .plan-summary{display:flex; gap:18px; flex-wrap:wrap; margin-bottom:14px; font-size:.82rem; color:var(--ink-soft);}
+  .plan-summary b{color:var(--ink); font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums;}
+
+  .list-table-wrap{max-height:360px; overflow-y:auto; overflow-x:auto; border:1px solid var(--line); border-radius:10px; margin-top:14px;}
+  .list-table-wrap table{margin:0;}
+  .list-table-wrap thead th{position:sticky; top:0; background:var(--surface); z-index:1;}
+
+  .plan-actions{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap;}
+
+  @media print{
+    .tabs, .plan-form, .reference-panel, .footnote, .plan-actions, #calcWorkspace, .lede, .eyebrow{display:none !important;}
+    body{padding:0;}
+    .panel{box-shadow:none; border:none;}
+    .plan-grid{grid-template-columns:1fr;}
+  }
 </style>
 </head>
 <body>
@@ -177,16 +243,17 @@
   <header class="hero">
     <p class="eyebrow">Estudio del Trabajo · Técnica de muestreo</p>
     <h1>Muestreo del Trabajo</h1>
-    <p class="lede">Calcula el tamaño de muestra, la precisión alcanzada o la proporción observada para estudios de muestreo del trabajo (actividad de máquinas u operarios), con los valores Z de los seis niveles de confianza usados en el método.</p>
+    <p class="lede">Calcula el tamaño de muestra, la precisión alcanzada, la proporción observada y genera el plan de observaciones aleatorio para estudios de muestreo del trabajo (actividad de máquinas u operarios), con los valores Z de los seis niveles de confianza usados en el método.</p>
   </header>
 
   <nav class="tabs" role="tablist" aria-label="Tipo de cálculo">
     <button class="tab" role="tab" data-mode="n" aria-selected="true">Tamaño de muestra (n)</button>
     <button class="tab" role="tab" data-mode="l" aria-selected="false">Precisión alcanzada (l)</button>
     <button class="tab" role="tab" data-mode="p" aria-selected="false">Proporción observada (p̂)</button>
+    <button class="tab" role="tab" data-mode="plan" aria-selected="false">Plan de observaciones</button>
   </nav>
 
-  <main class="workspace">
+  <main class="workspace" id="calcWorkspace">
     <section class="panel form-panel">
       <div class="field">
         <label for="confSelect">Nivel de confianza (área acumulada)</label>
@@ -251,6 +318,92 @@
     </section>
   </main>
 
+  <section class="panel plan-panel" id="planPanel" hidden>
+    <h2>Plan de observaciones aleatorio</h2>
+    <p class="hint">Genera los instantes de observación distribuidos al azar dentro del horario de estudio, evitando los periodos de descanso, para eliminar el sesgo de elegir tú mismo cuándo observar.</p>
+
+    <div class="plan-grid">
+      <div class="plan-form">
+        <div class="field">
+          <label for="planN">Número de observaciones a generar</label>
+          <input type="number" id="planN" min="1" max="5000" step="1" value="323">
+          <p class="hint">Usa <button type="button" class="link-btn" id="useSampleN">el tamaño de muestra ya calculado (n = <span id="sampleNPreview">323</span>)</button> o escribe tu propio total.</p>
+        </div>
+
+        <div class="field">
+          <label>Días de estudio</label>
+          <div class="day-toggles" id="dayToggles">
+            <button type="button" class="day-toggle" data-day="lun" aria-pressed="true">Lun</button>
+            <button type="button" class="day-toggle" data-day="mar" aria-pressed="true">Mar</button>
+            <button type="button" class="day-toggle" data-day="mie" aria-pressed="true">Mié</button>
+            <button type="button" class="day-toggle" data-day="jue" aria-pressed="true">Jue</button>
+            <button type="button" class="day-toggle" data-day="vie" aria-pressed="true">Vie</button>
+            <button type="button" class="day-toggle" data-day="sab" aria-pressed="false">Sáb</button>
+            <button type="button" class="day-toggle" data-day="dom" aria-pressed="false">Dom</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Horario de estudio</label>
+          <div class="time-range">
+            <input type="time" id="studyStart" value="08:00">
+            <span class="sep">–</span>
+            <input type="time" id="studyEnd" value="17:00">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Periodos de descanso (excluidos del muestreo)</label>
+          <div class="break-list" id="breakList">
+            <div class="break-row" data-break-row>
+              <div class="time-range">
+                <input type="time" class="break-start" value="13:00">
+                <span class="sep">–</span>
+                <input type="time" class="break-end" value="14:00">
+              </div>
+              <button type="button" class="icon-btn" data-remove-break aria-label="Eliminar este descanso">×</button>
+            </div>
+          </div>
+          <button type="button" class="add-btn" id="addBreak">+ Agregar otro periodo de descanso</button>
+        </div>
+
+        <div class="field">
+          <label for="roundStep">Redondear cada horario a</label>
+          <select id="roundStep">
+            <option value="1">el minuto exacto</option>
+            <option value="5" selected>5 minutos</option>
+            <option value="10">10 minutos</option>
+            <option value="15">15 minutos</option>
+          </select>
+          <p class="hint">Un redondeo de 5 o 10 minutos es más realista: le da tiempo al observador de llegar al punto de observación.</p>
+        </div>
+
+        <button type="button" class="btn btn-primary" id="btnGenerate">Generar plan aleatorio</button>
+      </div>
+
+      <div class="plan-results">
+        <p class="plan-warning" id="planWarning" hidden></p>
+        <div class="plan-summary" id="planSummary"></div>
+
+        <div class="table-scroll">
+          <table id="dayTable"></table>
+        </div>
+
+        <div class="list-table-wrap">
+          <table>
+            <thead><tr><th>Obs. No.</th><th>Día</th><th class="mono">Hora</th></tr></thead>
+            <tbody id="planListBody"></tbody>
+          </table>
+        </div>
+
+        <div class="plan-actions">
+          <button type="button" class="btn" id="btnPrint">Imprimir</button>
+          <button type="button" class="btn" id="btnCsv">Descargar CSV</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="panel reference-panel">
     <h2>Tabla de valores Z</h2>
     <p class="hint">Área acumulada bajo la curva normal estándar y su Z correspondiente. La columna derecha muestra el nivel de confianza equivalente en una prueba de dos colas — por ejemplo, el 95% de confianza clásico usa Z = 1.9600, área 0.975.</p>
@@ -280,15 +433,31 @@
     {area:0.999, z:3.0902}
   ];
 
+  var DAYS = [
+    {key:'lun', label:'Lunes'},
+    {key:'mar', label:'Martes'},
+    {key:'mie', label:'Miércoles'},
+    {key:'jue', label:'Jueves'},
+    {key:'vie', label:'Viernes'},
+    {key:'sab', label:'Sábado'},
+    {key:'dom', label:'Domingo'}
+  ];
+
   function twoTail(area){ return (2*area - 1) * 100; }
   function fmt(n, d){ return Number(n).toLocaleString('es-MX', {minimumFractionDigits:d, maximumFractionDigits:d}); }
   function clampPct(v){ v = Number(v); if(isNaN(v)) v = 0; return Math.min(100, Math.max(0, v)); }
+  function dayLabel(key){ for(var i=0;i<DAYS.length;i++){ if(DAYS[i].key===key) return DAYS[i].label; } return key; }
+  function dayIndex(key){ for(var i=0;i<DAYS.length;i++){ if(DAYS[i].key===key) return i; } return 99; }
+
+  var state = { nSample: 323 };
 
   var confSelect   = document.getElementById('confSelect');
   var confHint     = document.getElementById('confHint');
   var zTableBody    = document.getElementById('zTableBody');
   var tabs          = Array.prototype.slice.call(document.querySelectorAll('.tab'));
   var modeFieldsEls = Array.prototype.slice.call(document.querySelectorAll('.mode-fields'));
+  var calcWorkspace = document.getElementById('calcWorkspace');
+  var planPanel     = document.getElementById('planPanel');
 
   var resultLabel = document.getElementById('resultLabel');
   var resultValue = document.getElementById('resultValue');
@@ -348,12 +517,17 @@
     legendInactive.textContent = fmt(100-p,1) + '%';
   }
 
+  var sampleNPreview = document.getElementById('sampleNPreview');
+
   function calcN(){
     var row = currentZ();
     var p = clampPct(pEst.value) / 100;
     var l = Math.max(0.0001, clampPct(lDeseado.value) / 100);
     var raw = (row.z*row.z * p * (1-p)) / (l*l);
     var n = Math.ceil(raw);
+
+    state.nSample = n;
+    if(sampleNPreview) sampleNPreview.textContent = n.toLocaleString('es-MX');
 
     resultLabel.textContent = 'Observaciones necesarias, n';
     resultValue.textContent = isFinite(n) ? n.toLocaleString('es-MX') : '—';
@@ -404,6 +578,7 @@
   }
 
   function recalc(){
+    if(mode === 'plan') return;
     buildZTable();
     updateConfHint();
     if(mode === 'n') calcN();
@@ -415,6 +590,8 @@
     mode = next;
     tabs.forEach(function(t){ t.setAttribute('aria-selected', String(t.dataset.mode === mode)); });
     modeFieldsEls.forEach(function(el){ el.hidden = el.dataset.modeFields !== mode; });
+    calcWorkspace.hidden = (mode === 'plan');
+    planPanel.hidden = (mode !== 'plan');
     recalc();
   }
 
@@ -429,6 +606,261 @@
 
   buildConfSelect();
   setMode('n');
+
+  /* ================= Plan de observaciones aleatorio ================= */
+
+  var planN        = document.getElementById('planN');
+  var useSampleNBtn= document.getElementById('useSampleN');
+  var dayToggles    = Array.prototype.slice.call(document.querySelectorAll('.day-toggle'));
+  var studyStartEl = document.getElementById('studyStart');
+  var studyEndEl   = document.getElementById('studyEnd');
+  var breakList    = document.getElementById('breakList');
+  var addBreakBtn  = document.getElementById('addBreak');
+  var roundStepEl  = document.getElementById('roundStep');
+  var btnGenerate  = document.getElementById('btnGenerate');
+  var planWarning  = document.getElementById('planWarning');
+  var planSummary  = document.getElementById('planSummary');
+  var dayTable     = document.getElementById('dayTable');
+  var planListBody = document.getElementById('planListBody');
+  var btnPrint     = document.getElementById('btnPrint');
+  var btnCsv       = document.getElementById('btnCsv');
+
+  var lastPlanRows = [];
+
+  function timeToMin(str){ if(!str) return null; var p = str.split(':'); return (+p[0])*60 + (+p[1]); }
+  function minToTime(m){ m = Math.max(0, Math.round(m)); var h = Math.floor(m/60), mm = m%60; return (h<10?'0':'')+h+':'+(mm<10?'0':'')+mm; }
+
+  function selectedDays(){
+    return dayToggles.filter(function(b){ return b.getAttribute('aria-pressed') === 'true'; }).map(function(b){ return b.dataset.day; });
+  }
+
+  function breakIntervals(){
+    return Array.prototype.slice.call(breakList.querySelectorAll('[data-break-row]')).map(function(row){
+      var s = timeToMin(row.querySelector('.break-start').value);
+      var e = timeToMin(row.querySelector('.break-end').value);
+      return [s, e];
+    }).filter(function(b){ return b[0] != null && b[1] != null; });
+  }
+
+  function computeSegments(studyStart, studyEnd, breaks){
+    var clipped = breaks.map(function(b){ return [Math.max(studyStart, b[0]), Math.min(studyEnd, b[1])]; }).filter(function(b){ return b[1] > b[0]; });
+    clipped.sort(function(a,b){ return a[0] - b[0]; });
+    var merged = [];
+    clipped.forEach(function(b){
+      if(merged.length && b[0] <= merged[merged.length-1][1]){
+        merged[merged.length-1][1] = Math.max(merged[merged.length-1][1], b[1]);
+      } else {
+        merged.push(b.slice());
+      }
+    });
+    var segments = [], cursor = studyStart;
+    merged.forEach(function(b){
+      if(b[0] > cursor) segments.push([cursor, b[0]]);
+      cursor = Math.max(cursor, b[1]);
+    });
+    if(cursor < studyEnd) segments.push([cursor, studyEnd]);
+    return segments;
+  }
+
+  function wireRemoveButton(row){
+    var btn = row.querySelector('[data-remove-break]');
+    btn.addEventListener('click', function(){
+      if(breakList.querySelectorAll('[data-break-row]').length > 1){
+        row.remove();
+      } else {
+        row.querySelector('.break-start').value = '';
+        row.querySelector('.break-end').value = '';
+      }
+    });
+  }
+
+  dayToggles.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var pressed = btn.getAttribute('aria-pressed') === 'true';
+      btn.setAttribute('aria-pressed', String(!pressed));
+    });
+  });
+
+  Array.prototype.slice.call(breakList.querySelectorAll('[data-break-row]')).forEach(wireRemoveButton);
+
+  addBreakBtn.addEventListener('click', function(){
+    var row = document.createElement('div');
+    row.className = 'break-row';
+    row.setAttribute('data-break-row', '');
+    row.innerHTML =
+      '<div class="time-range">' +
+        '<input type="time" class="break-start" value="10:00">' +
+        '<span class="sep">–</span>' +
+        '<input type="time" class="break-end" value="10:15">' +
+      '</div>' +
+      '<button type="button" class="icon-btn" data-remove-break aria-label="Eliminar este descanso">×</button>';
+    breakList.appendChild(row);
+    wireRemoveButton(row);
+  });
+
+  if(useSampleNBtn){
+    useSampleNBtn.addEventListener('click', function(){ planN.value = state.nSample; });
+  }
+
+  function renderEmptyPlan(){
+    planSummary.innerHTML = '';
+    dayTable.innerHTML = '';
+    planListBody.innerHTML = '';
+    lastPlanRows = [];
+  }
+
+  function generatePlan(){
+    var n = Math.max(1, Math.min(5000, Math.round(Number(planN.value)) || 1));
+    var days = selectedDays();
+    var studyStart = timeToMin(studyStartEl.value);
+    var studyEnd = timeToMin(studyEndEl.value);
+    var roundStep = Number(roundStepEl.value) || 1;
+
+    planWarning.hidden = true;
+    planWarning.textContent = '';
+
+    if(!days.length){
+      planWarning.hidden = false;
+      planWarning.textContent = 'Selecciona al menos un día de estudio.';
+      renderEmptyPlan();
+      return;
+    }
+    if(studyStart == null || studyEnd == null || studyEnd <= studyStart){
+      planWarning.hidden = false;
+      planWarning.textContent = 'Revisa el horario de estudio: la hora final debe ser mayor que la inicial.';
+      renderEmptyPlan();
+      return;
+    }
+
+    var segments = computeSegments(studyStart, studyEnd, breakIntervals());
+    if(!segments.length){
+      planWarning.hidden = false;
+      planWarning.textContent = 'Los periodos de descanso cubren todo el horario de estudio; no queda tiempo disponible para observar.';
+      renderEmptyPlan();
+      return;
+    }
+
+    var totalSegMinutes = segments.reduce(function(s, seg){ return s + (seg[1]-seg[0]); }, 0);
+    var slotsPerDay = segments.reduce(function(s, seg){ return s + Math.floor((seg[1]-seg[0]) / roundStep) + 1; }, 0);
+
+    if(Math.ceil(n / days.length) > slotsPerDay){
+      planWarning.hidden = false;
+      planWarning.textContent = 'Se piden más observaciones por día de las que permite la resolución elegida (' + slotsPerDay + ' horarios distintos posibles por día); algunos horarios se repetirán. Reduce el redondeo o amplía el horario de estudio.';
+    }
+
+    var usedByDay = {};
+    days.forEach(function(d){ usedByDay[d] = new Set(); });
+
+    var rows = [];
+    for(var i=0; i<n; i++){
+      var day = days[Math.floor(Math.random() * days.length)];
+      var r = Math.random() * totalSegMinutes;
+      var seg = segments[segments.length-1];
+      for(var s=0; s<segments.length; s++){
+        var len = segments[s][1] - segments[s][0];
+        if(r < len){ seg = segments[s]; break; }
+        r -= len;
+      }
+      var t, attempts = 0, used = usedByDay[day];
+      do{
+        var raw = seg[0] + Math.random() * (seg[1]-seg[0]);
+        t = Math.round(raw / roundStep) * roundStep;
+        if(t < seg[0]) t = seg[0];
+        if(t > seg[1]) t = seg[1];
+        attempts++;
+      } while(used.has(t) && attempts < 25);
+      used.add(t);
+      rows.push({day: day, minutes: t});
+    }
+
+    rows.sort(function(a,b){ return dayIndex(a.day) - dayIndex(b.day) || a.minutes - b.minutes; });
+
+    lastPlanRows = rows;
+    renderPlan(rows, days, segments);
+  }
+
+  function renderPlan(rows, days, segments){
+    planSummary.innerHTML =
+      '<span>Observaciones generadas <b>' + rows.length.toLocaleString('es-MX') + '</b></span>' +
+      '<span>Días <b>' + days.length + '</b></span>' +
+      '<span>Bloques horarios <b>' + segments.length + '</b></span>';
+
+    var theadCells = '<th>Día</th>';
+    segments.forEach(function(seg){ theadCells += '<th class="mono">' + minToTime(seg[0]) + '–' + minToTime(seg[1]) + '</th>'; });
+    theadCells += '<th>Total</th>';
+
+    var counts = {};
+    days.forEach(function(d){ counts[d] = segments.map(function(){ return 0; }); });
+    var segTotals = segments.map(function(){ return 0; });
+
+    rows.forEach(function(r){
+      var idx = 0;
+      for(var i=0; i<segments.length; i++){
+        if(r.minutes >= segments[i][0] && r.minutes <= segments[i][1]){ idx = i; break; }
+      }
+      counts[r.day][idx]++;
+      segTotals[idx]++;
+    });
+
+    var bodyRows = '';
+    days.forEach(function(d){
+      var rowTotal = counts[d].reduce(function(a,b){ return a+b; }, 0);
+      bodyRows += '<tr><td>' + dayLabel(d) + '</td>';
+      counts[d].forEach(function(c){ bodyRows += '<td class="mono">' + c + '</td>'; });
+      bodyRows += '<td class="mono"><b>' + rowTotal + '</b></td></tr>';
+    });
+    var grandTotal = segTotals.reduce(function(a,b){ return a+b; }, 0);
+    bodyRows += '<tr class="total-row"><td>Total</td>';
+    segTotals.forEach(function(c){ bodyRows += '<td class="mono">' + c + '</td>'; });
+    bodyRows += '<td class="mono">' + grandTotal + '</td></tr>';
+
+    dayTable.innerHTML = '<thead><tr>' + theadCells + '</tr></thead><tbody>' + bodyRows + '</tbody>';
+
+    var listHtml = '';
+    rows.forEach(function(r, i){
+      listHtml += '<tr><td class="mono">' + (i+1) + '</td><td>' + dayLabel(r.day) + '</td><td class="mono">' + minToTime(r.minutes) + '</td></tr>';
+    });
+    planListBody.innerHTML = listHtml;
+  }
+
+  btnGenerate.addEventListener('click', generatePlan);
+
+  btnPrint.addEventListener('click', function(){ window.print(); });
+
+  function fallbackCsvDownload(blob){
+    try{
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = 'plan_muestreo_trabajo.csv';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+    }catch(e){ /* entorno restringido: usa Imprimir en su lugar */ }
+  }
+
+  btnCsv.addEventListener('click', function(){
+    if(!lastPlanRows.length) return;
+    var csv = 'Obs.,Dia,Hora\n';
+    lastPlanRows.forEach(function(r, i){ csv += (i+1) + ',' + dayLabel(r.day) + ',' + minToTime(r.minutes) + '\n'; });
+    var blob = new Blob(['﻿' + csv], {type: 'text/csv;charset=utf-8;'});
+
+    // Dentro del visor de Artifacts de Claude se usa la capacidad "downloads";
+    // en un sitio propio (por ejemplo, publicado en GitHub Pages) window.claude
+    // no existe y se usa la descarga estándar del navegador.
+    if(window.claude && typeof window.claude.use === 'function'){
+      window.claude.use('downloads').then(function(downloads){
+        if(downloads){
+          downloads.save({filename: 'plan_muestreo_trabajo.csv', data: blob}).catch(function(){ /* el usuario canceló */ });
+        } else {
+          fallbackCsvDownload(blob);
+        }
+      }).catch(function(){ fallbackCsvDownload(blob); });
+    } else {
+      fallbackCsvDownload(blob);
+    }
+  });
+
+  // estado inicial: ejemplo realista ya generado (coincide con n de la pestaña "Tamaño de muestra")
+  generatePlan();
 })();
 </script>
 
