@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muestreo del Trabajo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap">
+<style>
+  :root{
+    --ink:#182028;
+    --ink-soft:#5a6472;
+    --paper:#f2efe6;
+    --surface:#ffffff;
+    --surface-2:#eae5d6;
+    --line:#ddd6c4;
+    --accent:#bf5b0c;
+    --accent-ink:#ffffff;
+    --accent-soft:#f4e1c8;
+    --ok:#1f7a5c;
+    --ok-soft:#dcefe4;
+    --muted:#8b8375;
+    --muted-soft:#e6e1d3;
+    --mono-bg:#151b22;
+    --mono-fg:#ffb454;
+    --mono-fg-soft:#9aa5b1;
+    --shadow: 0 1px 2px rgba(24,20,10,.06), 0 10px 28px -14px rgba(24,20,10,.28);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#eef0f2;
+      --ink-soft:#a9b2bc;
+      --paper:#11151b;
+      --surface:#181e26;
+      --surface-2:#1f2730;
+      --line:#2b3540;
+      --accent:#e98a3a;
+      --accent-ink:#181109;
+      --accent-soft:#3a2814;
+      --ok:#4fd8a8;
+      --ok-soft:#163227;
+      --muted:#8992a0;
+      --muted-soft:#242c35;
+      --mono-bg:#05080c;
+      --mono-fg:#ffcf8a;
+      --mono-fg-soft:#7c8896;
+      --shadow: 0 1px 2px rgba(0,0,0,.5), 0 10px 28px -14px rgba(0,0,0,.7);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#eef0f2;
+    --ink-soft:#a9b2bc;
+    --paper:#11151b;
+    --surface:#181e26;
+    --surface-2:#1f2730;
+    --line:#2b3540;
+    --accent:#e98a3a;
+    --accent-ink:#181109;
+    --accent-soft:#3a2814;
+    --ok:#4fd8a8;
+    --ok-soft:#163227;
+    --muted:#8992a0;
+    --muted-soft:#242c35;
+    --mono-bg:#05080c;
+    --mono-fg:#ffcf8a;
+    --mono-fg-soft:#7c8896;
+    --shadow: 0 1px 2px rgba(0,0,0,.5), 0 10px 28px -14px rgba(0,0,0,.7);
+    color-scheme: dark;
+  }
+
+  *{box-sizing:border-box;}
+  html, body{margin:0; padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    padding-inline:16px;
+    padding-block:28px 48px;
+  }
+  .page{max-width:920px; margin-inline:auto; display:flex; flex-direction:column; gap:22px;}
+
+  .hero{display:flex; flex-direction:column; gap:8px; max-width:680px;}
+  .eyebrow{
+    margin:0; font-size:.72rem; font-weight:600; letter-spacing:.11em; text-transform:uppercase;
+    color:var(--accent);
+  }
+  h1{margin:0; font-size:clamp(1.7rem,4.6vw,2.35rem); font-weight:700; letter-spacing:-.01em; text-wrap:balance;}
+  .lede{margin:0; color:var(--ink-soft); font-size:.98rem; line-height:1.55; max-width:60ch;}
+
+  .tabs{display:flex; gap:6px; flex-wrap:wrap; background:var(--surface-2); padding:5px; border-radius:12px; width:fit-content; max-width:100%;}
+  .tab{
+    appearance:none; border:none; background:transparent; color:var(--ink-soft);
+    font-family:inherit; font-size:.86rem; font-weight:600; padding:9px 14px; border-radius:8px;
+    cursor:pointer; transition:background .15s ease, color .15s ease;
+    white-space:nowrap;
+  }
+  .tab:hover{color:var(--ink);}
+  .tab[aria-selected="true"]{background:var(--surface); color:var(--ink); box-shadow:var(--shadow);}
+  .tab:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+
+  .workspace{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start;}
+  @media (max-width:720px){ .workspace{grid-template-columns:1fr;} }
+
+  .panel{
+    background:var(--surface); border:1px solid var(--line); border-radius:16px;
+    padding:20px 20px 22px; box-shadow:var(--shadow);
+  }
+
+  .field{display:flex; flex-direction:column; gap:6px; margin-bottom:16px;}
+  .field:last-child{margin-bottom:0;}
+  label{font-size:.82rem; font-weight:600; color:var(--ink);}
+  .hint{margin:0; font-size:.78rem; color:var(--ink-soft); line-height:1.45;}
+  select, input[type="number"]{
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:.94rem; font-weight:500; color:var(--ink);
+    background:var(--paper); border:1px solid var(--line); border-radius:9px;
+    padding:10px 12px; width:100%;
+  }
+  select:focus, input:focus{outline:2px solid var(--accent); outline-offset:1px;}
+  .input-suffix{position:relative; display:flex; align-items:center;}
+  .input-suffix input{padding-right:34px;}
+  .input-suffix span{
+    position:absolute; right:12px; font-family:"IBM Plex Mono",monospace; font-size:.85rem;
+    color:var(--ink-soft); pointer-events:none;
+  }
+  .mode-fields[hidden]{display:none;}
+
+  .readout{
+    background:var(--mono-bg); border-radius:12px; padding:18px 18px 16px; margin-bottom:16px;
+  }
+  .readout-label{margin:0 0 6px; font-size:.72rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--mono-fg-soft);}
+  .readout-value{
+    margin:0; font-family:"IBM Plex Mono",monospace; font-weight:700; color:var(--mono-fg);
+    font-size:clamp(2.1rem,7vw,2.7rem); line-height:1.05; font-variant-numeric:tabular-nums;
+  }
+  .readout-sub{margin:6px 0 0; font-size:.78rem; color:var(--mono-fg-soft); font-family:"IBM Plex Mono",monospace;}
+
+  .status-bar{height:10px; border-radius:6px; background:var(--muted-soft); overflow:hidden; display:flex; margin-bottom:8px;}
+  .status-fill{height:100%; background:var(--ok); transition:width .2s ease;}
+  .status-legend{display:flex; gap:18px; flex-wrap:wrap; margin-bottom:16px; font-size:.82rem; color:var(--ink-soft);}
+  .status-legend b{color:var(--ink); font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums;}
+  .dot{display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; vertical-align:middle;}
+  .dot-ok{background:var(--ok);}
+  .dot-muted{background:var(--muted);}
+
+  .formula-card{
+    background:var(--surface-2); border-radius:10px; padding:14px 14px 12px; font-size:.86rem;
+    color:var(--ink-soft);
+  }
+  .formula-card .f-title{margin:0 0 8px; font-weight:600; color:var(--ink); font-size:.82rem;}
+  .formula-line{
+    font-family:"IBM Plex Mono",monospace; font-size:.86rem; color:var(--ink);
+    line-height:1.9; word-break:break-word;
+  }
+  .frac{display:inline-flex; flex-direction:column; vertical-align:middle; text-align:center; margin:0 .2em; line-height:1.15;}
+  .frac .num{border-bottom:1.4px solid currentColor; padding:0 .2em .06em;}
+  .frac .den{padding:.06em .2em 0;}
+
+  .reference-panel h2{margin:0 0 4px; font-size:1rem; font-weight:700;}
+  .reference-panel .hint{margin-bottom:14px;}
+  table{width:100%; border-collapse:collapse; font-size:.86rem;}
+  th, td{text-align:left; padding:9px 10px; border-bottom:1px solid var(--line); font-variant-numeric:tabular-nums;}
+  th{font-size:.72rem; font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-soft);}
+  td.mono, th.mono{font-family:"IBM Plex Mono",monospace;}
+  tr.active-row td{background:var(--accent-soft);}
+  .table-scroll{overflow-x:auto;}
+
+  .footnote{margin:4px 2px 0; font-size:.78rem; color:var(--ink-soft); font-family:"IBM Plex Mono",monospace;}
+</style>
+</head>
+<body>
+
+<div class="page">
+  <header class="hero">
+    <p class="eyebrow">Estudio del Trabajo · Técnica de muestreo</p>
+    <h1>Muestreo del Trabajo</h1>
+    <p class="lede">Calcula el tamaño de muestra, la precisión alcanzada o la proporción observada para estudios de muestreo del trabajo (actividad de máquinas u operarios), con los valores Z de los seis niveles de confianza usados en el método.</p>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Tipo de cálculo">
+    <button class="tab" role="tab" data-mode="n" aria-selected="true">Tamaño de muestra (n)</button>
+    <button class="tab" role="tab" data-mode="l" aria-selected="false">Precisión alcanzada (l)</button>
+    <button class="tab" role="tab" data-mode="p" aria-selected="false">Proporción observada (p̂)</button>
+  </nav>
+
+  <main class="workspace">
+    <section class="panel form-panel">
+      <div class="field">
+        <label for="confSelect">Nivel de confianza (área acumulada)</label>
+        <select id="confSelect"></select>
+        <p class="hint" id="confHint"></p>
+      </div>
+
+      <div class="mode-fields" data-mode-fields="n">
+        <div class="field">
+          <label for="pEst">Proporción estimada de la actividad, p</label>
+          <div class="input-suffix"><input type="number" id="pEst" value="70" min="0" max="100" step="0.1"><span>%</span></div>
+          <p class="hint">De un estudio piloto o de la mejor estimación disponible. Si no hay dato previo, usa 50% (caso más conservador).</p>
+        </div>
+        <div class="field">
+          <label for="lDeseado">Error permitido, l</label>
+          <div class="input-suffix"><input type="number" id="lDeseado" value="5" min="0.1" max="100" step="0.1"><span>%</span></div>
+          <p class="hint">Límite de error aceptado alrededor de p.</p>
+        </div>
+      </div>
+
+      <div class="mode-fields" data-mode-fields="l" hidden>
+        <div class="field">
+          <label for="pObsL">Proporción observada, p</label>
+          <div class="input-suffix"><input type="number" id="pObsL" value="70" min="0" max="100" step="0.1"><span>%</span></div>
+        </div>
+        <div class="field">
+          <label for="nReal">Observaciones realizadas, n</label>
+          <input type="number" id="nReal" value="323" min="1" step="1">
+        </div>
+      </div>
+
+      <div class="mode-fields" data-mode-fields="p" hidden>
+        <div class="field">
+          <label for="nTotal">Observaciones totales, n</label>
+          <input type="number" id="nTotal" value="323" min="1" step="1">
+        </div>
+        <div class="field">
+          <label for="kActivo">Observaciones registradas como "activo", k</label>
+          <input type="number" id="kActivo" value="226" min="0" step="1">
+          <p class="hint" id="kHint">p̂ = k / n</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel result-panel">
+      <div class="readout">
+        <p class="readout-label" id="resultLabel">Observaciones necesarias, n</p>
+        <p class="readout-value" id="resultValue">323</p>
+        <p class="readout-sub" id="resultSub">95% de confianza (dos colas) · ±5.0% de error</p>
+      </div>
+
+      <div class="status-bar"><div class="status-fill" id="statusFill" style="width:70%"></div></div>
+      <div class="status-legend">
+        <span><i class="dot dot-ok"></i>Activo <b id="legendActive">70.0%</b></span>
+        <span><i class="dot dot-muted"></i>Inactivo <b id="legendInactive">30.0%</b></span>
+      </div>
+
+      <div class="formula-card">
+        <p class="f-title">Memoria de cálculo</p>
+        <div class="formula-line" id="formulaLine"></div>
+      </div>
+    </section>
+  </main>
+
+  <section class="panel reference-panel">
+    <h2>Tabla de valores Z</h2>
+    <p class="hint">Área acumulada bajo la curva normal estándar y su Z correspondiente. La columna derecha muestra el nivel de confianza equivalente en una prueba de dos colas — por ejemplo, el 95% de confianza clásico usa Z = 1.9600, área 0.975.</p>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th>Área (p)</th><th class="mono">Z</th><th>Confianza equivalente (2 colas)</th></tr>
+        </thead>
+        <tbody id="zTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <p class="footnote">n = Z²·p(1−p) / l² &nbsp;·&nbsp; l = Z·√(p(1−p)/n) &nbsp;·&nbsp; IC: p̂ ± l</p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var Z_TABLE = [
+    {area:0.90,  z:1.2816},
+    {area:0.95,  z:1.6449},
+    {area:0.975, z:1.9600},
+    {area:0.99,  z:2.3263},
+    {area:0.995, z:2.5758},
+    {area:0.999, z:3.0902}
+  ];
+
+  function twoTail(area){ return (2*area - 1) * 100; }
+  function fmt(n, d){ return Number(n).toLocaleString('es-MX', {minimumFractionDigits:d, maximumFractionDigits:d}); }
+  function clampPct(v){ v = Number(v); if(isNaN(v)) v = 0; return Math.min(100, Math.max(0, v)); }
+
+  var confSelect   = document.getElementById('confSelect');
+  var confHint     = document.getElementById('confHint');
+  var zTableBody    = document.getElementById('zTableBody');
+  var tabs          = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+  var modeFieldsEls = Array.prototype.slice.call(document.querySelectorAll('.mode-fields'));
+
+  var resultLabel = document.getElementById('resultLabel');
+  var resultValue = document.getElementById('resultValue');
+  var resultSub   = document.getElementById('resultSub');
+  var statusFill  = document.getElementById('statusFill');
+  var legendActive= document.getElementById('legendActive');
+  var legendInactive = document.getElementById('legendInactive');
+  var formulaLine = document.getElementById('formulaLine');
+
+  var pEst = document.getElementById('pEst');
+  var lDeseado = document.getElementById('lDeseado');
+  var pObsL = document.getElementById('pObsL');
+  var nReal = document.getElementById('nReal');
+  var nTotal = document.getElementById('nTotal');
+  var kActivo = document.getElementById('kActivo');
+
+  var mode = 'n';
+
+  function buildConfSelect(){
+    Z_TABLE.forEach(function(row, i){
+      var opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = (row.area*100).toFixed(1) + '%  →  Z = ' + row.z.toFixed(4);
+      confSelect.appendChild(opt);
+    });
+    confSelect.value = 2; // 0.975 -> Z 1.96, matches the classic 95%-confidence exercise
+  }
+
+  function buildZTable(){
+    zTableBody.innerHTML = '';
+    Z_TABLE.forEach(function(row, i){
+      var tr = document.createElement('tr');
+      if(String(i) === confSelect.value) tr.className = 'active-row';
+      tr.innerHTML =
+        '<td class="mono">' + row.area.toFixed(3) + '</td>' +
+        '<td class="mono">' + row.z.toFixed(4) + '</td>' +
+        '<td>' + twoTail(row.area).toFixed(1) + '%</td>';
+      zTableBody.appendChild(tr);
+    });
+  }
+
+  function currentZ(){ return Z_TABLE[Number(confSelect.value)]; }
+
+  function updateConfHint(){
+    var row = currentZ();
+    confHint.textContent = 'Equivale a ' + twoTail(row.area).toFixed(1) + '% de confianza en una prueba de dos colas. Para el clásico "95% de confianza, ±5% de error" de muestreo del trabajo, se usa el área 0.975 (Z = 1.9600).';
+  }
+
+  function frac(numHtml, denHtml){
+    return '<span class="frac"><span class="num">' + numHtml + '</span><span class="den">' + denHtml + '</span></span>';
+  }
+
+  function setStatusBar(pPercent){
+    var p = clampPct(pPercent);
+    statusFill.style.width = p + '%';
+    legendActive.textContent = fmt(p,1) + '%';
+    legendInactive.textContent = fmt(100-p,1) + '%';
+  }
+
+  function calcN(){
+    var row = currentZ();
+    var p = clampPct(pEst.value) / 100;
+    var l = Math.max(0.0001, clampPct(lDeseado.value) / 100);
+    var raw = (row.z*row.z * p * (1-p)) / (l*l);
+    var n = Math.ceil(raw);
+
+    resultLabel.textContent = 'Observaciones necesarias, n';
+    resultValue.textContent = isFinite(n) ? n.toLocaleString('es-MX') : '—';
+    resultSub.textContent = twoTail(row.area).toFixed(1) + '% de confianza (dos colas) · ±' + fmt(l*100,1) + '% de error';
+    setStatusBar(p*100);
+
+    formulaLine.innerHTML =
+      'n = ' + frac(row.z.toFixed(4)+'² · '+p.toFixed(2)+'(' + (1-p).toFixed(2) + ')', l.toFixed(4)+'²') +
+      '<br>n = ' + frac((row.z*row.z).toFixed(4)+' · '+(p*(1-p)).toFixed(4), (l*l).toFixed(6)) +
+      '<br>n = ' + fmt(raw,2) + ' → <b>' + n.toLocaleString('es-MX') + ' observaciones</b>';
+  }
+
+  function calcL(){
+    var row = currentZ();
+    var p = clampPct(pObsL.value) / 100;
+    var n = Math.max(1, Number(nReal.value) || 1);
+    var l = row.z * Math.sqrt((p*(1-p)) / n);
+
+    resultLabel.textContent = 'Precisión alcanzada, l';
+    resultValue.textContent = '±' + fmt(l*100,2) + '%';
+    resultSub.textContent = 'con n = ' + n.toLocaleString('es-MX') + ' observaciones y p = ' + fmt(p*100,1) + '%';
+    setStatusBar(p*100);
+
+    formulaLine.innerHTML =
+      'l = ' + row.z.toFixed(4) + ' · √' + frac(p.toFixed(2)+'('+(1-p).toFixed(2)+')', n.toLocaleString('es-MX')) +
+      '<br>l = ' + row.z.toFixed(4) + ' · √' + fmt((p*(1-p))/n, 6) +
+      '<br>l = ' + row.z.toFixed(4) + ' · ' + fmt(Math.sqrt((p*(1-p))/n), 4) +
+      ' = <b>±' + fmt(l*100,2) + '%</b>';
+  }
+
+  function calcP(){
+    var row = currentZ();
+    var n = Math.max(1, Number(nTotal.value) || 1);
+    var k = Math.min(n, Math.max(0, Number(kActivo.value) || 0));
+    var p = k / n;
+    var l = row.z * Math.sqrt((p*(1-p)) / n);
+    var lo = Math.max(0, p-l), hi = Math.min(1, p+l);
+
+    resultLabel.textContent = 'Proporción observada, p̂';
+    resultValue.textContent = fmt(p*100,1) + '%';
+    resultSub.textContent = 'IC ' + twoTail(row.area).toFixed(1) + '%: [' + fmt(lo*100,1) + '%, ' + fmt(hi*100,1) + '%]  (±' + fmt(l*100,2) + '%)';
+    setStatusBar(p*100);
+
+    formulaLine.innerHTML =
+      'p̂ = k / n = ' + k.toLocaleString('es-MX') + ' / ' + n.toLocaleString('es-MX') + ' = <b>' + fmt(p*100,1) + '%</b>' +
+      '<br>l = ' + row.z.toFixed(4) + ' · √' + frac(fmt(p*(1-p),4), n.toLocaleString('es-MX')) + ' = ±' + fmt(l*100,2) + '%' +
+      '<br>IC = p̂ ± l = [<b>' + fmt(lo*100,1) + '%</b>, <b>' + fmt(hi*100,1) + '%</b>]';
+  }
+
+  function recalc(){
+    buildZTable();
+    updateConfHint();
+    if(mode === 'n') calcN();
+    else if(mode === 'l') calcL();
+    else calcP();
+  }
+
+  function setMode(next){
+    mode = next;
+    tabs.forEach(function(t){ t.setAttribute('aria-selected', String(t.dataset.mode === mode)); });
+    modeFieldsEls.forEach(function(el){ el.hidden = el.dataset.modeFields !== mode; });
+    recalc();
+  }
+
+  tabs.forEach(function(t){
+    t.addEventListener('click', function(){ setMode(t.dataset.mode); });
+  });
+
+  [confSelect, pEst, lDeseado, pObsL, nReal, nTotal, kActivo].forEach(function(el){
+    el.addEventListener('input', recalc);
+    el.addEventListener('change', recalc);
+  });
+
+  buildConfSelect();
+  setMode('n');
+})();
+</script>
+
+</body>
+</html>
