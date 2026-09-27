@@ -234,6 +234,14 @@
     body{padding:0;}
     .panel{box-shadow:none; border:none;}
     .plan-grid{grid-template-columns:1fr;}
+    *{ -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; color-adjust:exact !important; }
+    /* el listado usa una ventana con scroll en pantalla; al imprimir debe mostrarse completo, no solo lo visible */
+    .list-table-wrap{max-height:none; overflow:visible; border:none; border-radius:0;}
+    .list-table-wrap thead th{position:static;}
+    table{page-break-inside:auto;}
+    tr{page-break-inside:avoid; page-break-after:auto;}
+    thead{display:table-header-group;}
+    @page{ margin:1.4cm; }
   }
 </style>
 </head>
